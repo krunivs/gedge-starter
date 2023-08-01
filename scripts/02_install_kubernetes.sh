@@ -26,15 +26,13 @@ if [[ -f $SYSTEMCTL_CONFIG_FILE_ORIG_BAK ]]; then
     mv $SYSTEMCTL_CONFIG_FILE_ORIG_BAK $SYSTEMCTL_CONFIG_FILE
 fi
 
+# Set bridge nf-call-iptable, ipv4 forward
 info "Create $SYSTEMCTL_K8S_CONFIG_FILE file"
 cat << EOF | sudo tee $SYSTEMCTL_K8S_CONFIG_FILE
 net.bridge.bridge-nf-call-ip6tables = 1
 net.bridge.bridge-nf-call-iptables = 1
+net.ipv4.ip_forward = 1
 EOF
-
-# Enable ip forward
-info "echo '1' > /proc/sys/net/ipv4/ip_forward"
-echo '1' > /proc/sys/net/ipv4/ip_forward
 
 info "sysctl --system"
 sysctl --system
